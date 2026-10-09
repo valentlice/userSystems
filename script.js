@@ -1,6 +1,7 @@
 const form = document.querySelector('#formCadastro');
 const buscarCep = document.querySelector('#buscarCep');
 const cep = document.querySelector('#cep');
+const estado = document.querySelector(`#estado`);
 
 function mensagem(texto, tipo = "sucesso") {
     Toastify({
@@ -51,5 +52,22 @@ form.addEventListener("submit", function(event){
     ));
     form.reset();
 });
+
+function adicionarOpcao(select, texto, valor){
+    select.add(new Option(texto, valor))
+}
+
+async function carregarEstados () {
+try {
+   const resposta = await fetch ("https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome");
+   if (!resposta.ok){
+    throw new Error("Não foi posssivel carregar estados.")
+   }
+   const estados = await resposta.json();
+     estados.forEach(item => adicionarOpcao(estado, item.nome, item.sigla ))
+} catch(erro){}
+
+}
+carregarEstados()
 
 
